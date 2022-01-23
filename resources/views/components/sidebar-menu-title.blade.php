@@ -1,0 +1,1 @@
+<li class="app-sidebar__heading">{{$title}}</li>
