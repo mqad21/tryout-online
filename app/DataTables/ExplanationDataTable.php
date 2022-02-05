@@ -32,7 +32,12 @@ class ExplanationDataTable extends DataTable
                         'url' => route("tryout.explanation", encrypt($data->id)),
                         'title' => 'Pembahasan',
                         'icon' => 'fa fa-check-square'
-                    ]
+                    ],
+                    [
+                        'url' => route("tryout.result", encrypt($data->tryOut->id)),
+                        'title' => 'Peringkat',
+                        'icon' => 'fa fa-list-ol'
+                    ],
                 ];
                 return view('datatables.action', compact(['custom']));
             })

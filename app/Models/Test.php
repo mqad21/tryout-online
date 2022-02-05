@@ -12,7 +12,7 @@ class Test extends Model
     use HasFactory;
 
     protected $guarded = [];
-    protected $appends = ['duration'];
+    protected $appends = ['duration', 'answers_list'];
 
     public function scopeOwn()
     {
@@ -36,6 +36,11 @@ class Test extends Model
     public function TryOut()
     {
         return $this->belongsTo(TryOut::class);
+    }
+    
+    public function User()
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function Answers()
@@ -68,4 +73,18 @@ class Test extends Model
     public function getDurationAttribute() {
         return $this->started_at->diff(Carbon::parse($this->done_at))->format('%H:%I:%S');;
     }
+
+    public function getAnswersListAttribute() {
+        if (!$this->done_at) return null;
+        return $this->answers()->with('option')->get()->pluck('option')->flatten()->pluck('id', 'question_id');
+    }
+
+    public function getScoreAttribute() {
+        return $this->answers()->with(['option.question.category'])->get()->groupBy('option.question.category.name')->map->sum('option.score');
+    }
+
+    public function getScoreSumAttribute() {
+        return $this->answers()->with(['option.question.category'])->get()->sum('option.score');
+    }
+
 }

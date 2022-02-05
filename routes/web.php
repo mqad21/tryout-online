@@ -79,6 +79,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/tryout/question/{id}', [TryOutController::class, 'getQuestion'])->name('tryout.question');
         Route::get('/test/{id}/submit', [TestController::class, 'submit'])->name('test.submit');
         Route::get('/tryout/explanation/{id?}', [TryOutController::class, 'explanation'])->name('tryout.explanation');
+        Route::get('/tryout/explanation/{id}/result', [TryOutController::class, 'result'])->name('tryout.result');
+        Route::get('/tryout/explanation/{id}/result/json', [TryOutController::class, 'resultJson'])->name('tryout.result.json');
     });
 
     role_route([Role::ADMIN], function () {

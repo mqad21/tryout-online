@@ -11448,10 +11448,13 @@ button,
     transform: rotate(-180deg)
 }
 
-.vertical-nav-menu li a.mm-active {
+.vertical-nav-menu li a.mm-active,
+.vertical-nav-menu li a.mm-active i
+{
     color: #343a40;
     background: #71b7f5;
-    font-weight: bold
+    font-weight: bold;
+    opacity: 1;
 }
 
 .vertical-nav-menu i.metismenu-state-icon,

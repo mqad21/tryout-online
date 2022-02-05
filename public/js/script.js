@@ -112,6 +112,11 @@ function deleteItem(e) {
         });
 }
 
+function msToTime(s) {
+  var pad = (n, z = 2) => ('00' + n).slice(-z);
+  return pad(s/3.6e6|0) + ':' + pad((s%3.6e6)/6e4 | 0) + ':' + pad((s%6e4)/1000|0);
+}
+
 function createPopupWin(pageURL, pageTitle,
     popupWinWidth, popupWinHeight) {
     var left = (screen.width - popupWinWidth) / 2;

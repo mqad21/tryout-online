@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\ExplanationDataTable;
+use App\DataTables\ResultDataTable;
 use App\DataTables\TryOutDataTable;
 use App\Models\Question;
 use App\Models\Region;
@@ -12,6 +13,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Yajra\DataTables\DataTables as DataTablesDataTables;
+use Yajra\DataTables\Facades\DataTables;
 
 class TryOutController extends Controller
 {
@@ -110,20 +113,42 @@ class TryOutController extends Controller
         $question = Question::findOrFail($id);
         $next = $request->next;
         $prev = $request->prev;
-        return view('pages.tryout.question', compact('question', 'next', 'prev'));
+        $test = Test::findOrFail($request->testId);
+        return view('pages.tryout.question', compact('question', 'next', 'prev', 'test'));
     }
 
     /**
-     * Show  explanation.
+     * Show explanation.
      */
-    public function explanation(ExplanationDataTable $dataTable, Request $request, $id = null) {
+    public function explanation(ExplanationDataTable $dataTable, Request $request, $id = null)
+    {
         if (!$id) {
             $testIsEmpty = Auth::user()->tests->isEmpty();
-            return $dataTable->render('pages.tryout.list-done', ['testIsEmpty' => $testIsEmpty]);
+            return $dataTable->render('pages.tryout.list-done', compact('testIsEmpty'));
         }
         $id = decrypt($id);
         $test = Test::findOrFail($id);
         return view('pages.tryout.do', compact('test'));
+    }
+
+    /**
+     * Show result json.
+     */
+    public function result($id)
+    {
+        $id = decrypt($id);
+        $tryout = TryOut::findOrFail($id);
+        return view('pages.tryout.result', compact('tryout'));
+    }
+
+    /**
+     * Show result json.
+     */
+    public function resultJson(DataTablesDataTables $dataTable, $id)
+    {
+        $id = decrypt($id);
+        $tryout = TryOut::findOrFail($id);
+        return $dataTable->collection($tryout->rank)->toJson();
     }
 
     /**

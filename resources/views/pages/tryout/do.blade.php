@@ -5,8 +5,17 @@
 @section('content')
 
 @php
-    $questions = $test->tryout->questions->pluck('id')
+    $questions = $test->tryout->questions;
+    $answersList = $test->answersList;
 @endphp
+
+@if ($test->done_at)
+<div class="row">
+    <div class="col-md-12">
+        <a href="{{ route('tryout.explanation') }}" class="btn btn-primary mb-4"><i class="fa fa-arrow-left mr-2"></i>Daftar Hasil dan Pembahasan</a>
+    </div>
+</div>
+@endif
 
 <div class="row">
     <div class="col-md-12">
@@ -19,11 +28,11 @@
                     </tr>
                     <tr>
                         <th>Kategori</th>
-                        <td>{{ $test->tryout->questions->pluck('category.name')->unique()->join(", ") }}</td>
+                        <td>{{ $questions->pluck('category.name')->unique()->join(", ") }}</td>
                     </tr>
                     <tr>
                         <th>Jumlah Soal</th>
-                        <td>{{ $test->tryout->questions()->count() }} Soal</td>
+                        <td>{{ $questions->count() }} Soal</td>
                     </tr>
                 </table>
             </div>
@@ -45,6 +54,21 @@
                 </div>
             </div>
             <div class="col-md-4">
+                @if ($test->done_at)
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h1 class="card-title">Skor</h1>
+                            <table class="table table-bordered">
+                                @foreach ($test->score as $category => $score)
+                                <tr>
+                                    <th>{{ $category }}</th>
+                                    <td>{{ $score }}</td>
+                                </tr>    
+                                @endforeach
+                            </table>
+                        </div>
+                    </div>
+                @endif
                 <div class="card">
                     <div class="card-body">
                         <form action="{{ route('test.submit', $test->id) }}">
@@ -53,9 +77,9 @@
                             <div class="row px-2 mb-3">
                                 @foreach($questions as $index => $question)
                                     <div class="col-md-3 col-4 p-1">
-                                        <div data-question-number="{{ $index + 1 }}" data-question-id="{{ $question }}" class="btn btn-sm btn-light w-100 number">{{
+                                        <div data-question-number="{{ $index + 1 }}" data-question-id="{{ $question->id }}" class="btn btn-sm w-100 number {{ isset($answersList) ? ($answersList[$question->id] == $question->correct_answer->id ? 'btn-success' : 'btn-danger') : 'btn-light' }}">{{
                                         $index + 1 }}</div>
-                                        <input type="hidden" name="answers[{{ $question }}]">
+                                        <input type="hidden" name="answers[{{ $question->id }}]">
                                     </div>
                                 @endforeach
                             </div>
@@ -76,10 +100,14 @@
 <script>
     $(document).ready(function() {
         cleanup();
+        const testId = @json($test->id);
         let questions = parseLocalStorage("questions") || {}
-        let answers = parseLocalStorage("answers") || {}
+        let answers = @json($answersList) || parseLocalStorage("answers") || {}
         let remainingTime = @json($test->done_at ? 0 : $test->remainingTime);
-        syncNavigationIndicator();
+
+        @if(!$test->done_at)
+        syncNavigationIndicator()
+        @endif
 
         initTimer(remainingTime)
         var timer = setInterval(() => {
@@ -94,11 +122,11 @@
             loadQuestion($(this).data("question-id"))
         })
 
-        let currentQuestion = localStorage.getItem("currentQuestion") || @json($questions[0]);
+        let currentQuestion = localStorage.getItem("currentQuestion") || @json($questions[0]->id);
         $(".number[data-question-id=" + currentQuestion + "]").click()
 
         function cleanup() {
-            if (localStorage.getItem("currentTest") != @json($test->id)) {
+            if (localStorage.getItem("currentTest") != @json($test->id) || @json($test->done_at)) {
                 localStorage.removeItem("questions")
                 localStorage.removeItem("answers")
                 localStorage.removeItem("currentQuestion")
@@ -124,7 +152,7 @@
             const number = parseInt(numberElement.data("question-number"));
             const nextNumber = number == @json(sizeof($questions)) ? 0 : $(`[data-question-number=${number+1}]`).data("question-id")
             const prevNumber = number == 1 ? 0 : $(`[data-question-number=${number-1}]`).data("question-id")
-            const url = @json(url('tryout/question')) + `/${questionId}?next=${nextNumber}&prev=${prevNumber}`
+            const url = @json(url('tryout/question')) + `/${questionId}?next=${nextNumber}&prev=${prevNumber}&testId=${testId}`
 
             $(".number").removeClass("active")
             numberElement.addClass("active")
@@ -144,10 +172,6 @@
             saveLocalStorage(questionId, 'currentQuestion')
             currentQuestion = questionId
 
-            if (remainingTime <= 0) {
-                disableAnswer()
-            }
-
             $([document.documentElement, document.body]).animate({
                 scrollTop: $("#question-container").offset().top - 120
             }, 500);
@@ -155,6 +179,10 @@
         }
 
         function initEvents(questionId) {
+            if (remainingTime <= 0) {
+                disableAnswer()
+            }
+
             $("input[name=answer][value=" + answers[questionId] + "]").prop("checked", true)
 
             $("#next").click(function() {

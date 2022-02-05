@@ -15,6 +15,7 @@ class User extends Model implements Authenticatable
     use AuthAuthenticatable;
 
     protected $guarded = [];
+    protected $hidden = ['password'];
 
     public function role()
     {
