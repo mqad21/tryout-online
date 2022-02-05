@@ -25786,3 +25786,7 @@ div.avatar img {
     border: 1px solid #ced4da;
     border-radius: .25rem;
 }
+
+ol#selected-question li div {
+    margin-left: 1rem;
+}

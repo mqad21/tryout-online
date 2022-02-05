@@ -15,9 +15,14 @@ use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\QuestionCategoryController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\SuggestionController;
+use App\Http\Controllers\TestController;
+use App\Http\Controllers\TryOutController;
 use App\Http\Controllers\UserController;
 use App\Models\DevelopmentSuggestion;
+use App\Models\QuestionOption;
 use App\Models\Role;
+use App\Models\Test;
+use App\Models\TryOut;
 use Illuminate\Support\Facades\Route;
 
 // Untuk route yang butuh role.
@@ -68,8 +73,21 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/profil', [ProfileController::class, 'update']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/', [DashboardController::class, 'index']);
+
+    role_route([Role::ADMIN, Role::SISWA], function () {
+        Route::get('/tryout/do/{id?}', [TryOutController::class, 'do'])->name('tryout.do');
+        Route::get('/tryout/question/{id}', [TryOutController::class, 'getQuestion'])->name('tryout.question');
+        Route::get('/test/{id}/submit', [TestController::class, 'submit'])->name('test.submit');
+        Route::get('/tryout/explanation/{id?}', [TryOutController::class, 'explanation'])->name('tryout.explanation');
+    });
+
     role_route([Role::ADMIN], function () {
+        Route::get('/question/search', [QuestionController::class, 'search'])->name('question.search');
         Route::resource('/question', QuestionController::class);
         Route::resource('/question-category', QuestionCategoryController::class);
+        Route::resource('/tryout', TryOutController::class);
+        Route::match(['get', 'post'], '/tryout/set-question/{id}', [TryOutController::class, 'setQuestions'])->name('tryout.set-question');
+        Route::resource('/user', UserController::class);
+        Route::match(['get', 'post'], '/user/change-password/{id}', [UserController::class, 'changePassword'])->name('user.change-password');
     });
 });

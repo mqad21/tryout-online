@@ -21,6 +21,24 @@ class QuestionController extends Controller
     }
 
     /**
+     * Search question.
+     */
+    public function search(Request $request)
+    {
+        $query = $request->q;
+        $questions = Question::whereRaw('regexp_replace(question, "<[^>]*>", "") like ?', "%$query%")
+            ->orWhereRaw('replace(question, " ", "") like ?', "%$query%")
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'value' => $item,
+                    'text' => substr(strip_tags(htmlspecialchars_decode($item->question)), 0, 50)
+                ];
+            });
+        return $questions;
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -73,7 +91,7 @@ class QuestionController extends Controller
     public function edit(Question $question)
     {
         $questionCategories = QuestionCategory::all();
-        $questionOptions = $question->options->map(function($option){
+        $questionOptions = $question->options->map(function ($option) {
             $option->value = $option->option;
             return $option;
         });

@@ -21,6 +21,11 @@ class User extends Model implements Authenticatable
         return $this->belongsTo(Role::class);
     }
 
+    public function region()
+    {
+        return $this->belongsTo(Region::class);
+    }
+
     public function getShortNameAttribute()
     {
         $shortName = $this->name;
@@ -34,5 +39,9 @@ class User extends Model implements Authenticatable
             }
         }
         return $shortName;
+    }
+
+    public function Tests() {
+        return $this->hasMany(Test::class)->whereNotNull('done_at');
     }
 }

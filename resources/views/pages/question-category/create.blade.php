@@ -36,8 +36,12 @@
                 <div class="card-body">
                     <div class="form-row mb-4">
                         <div class="col-12 mb-3">
-                            <label for="title">Nama Kategori</label>
+                            <label for="name">Nama Kategori</label>
                             <input type="text" class="form-control" id="name" name="name" required max="255" value="{{ old('name') ?? $questionCategory->name ?? "" }}">
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="passing_grade">Passing Grade</label>
+                            <input type="number" class="form-control" id="passing_grade" name="passing_grade" required max="255" value="{{ old('passing_grade') ?? $questionCategory->passing_grade ?? "" }}">
                         </div>
                         <div class="col-12">
                             <input type="submit" value="Simpan" class="btn btn-primary">

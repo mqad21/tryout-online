@@ -38,8 +38,8 @@
 
                         <div class="col-12 mb-3">
                             <label for="question_category">Kategori Soal</label>
-                            <select class="form-control" name="question_category_id" id="question_category">
-                                <option required selected disabled>Pilih Kategori Soal</option>
+                            <select required class="form-control" name="question_category_id" id="question_category">
+                                <option selected disabled>Pilih Kategori Soal</option>
                                 @foreach($questionCategories as $category)
                                     <option {{ (old('question_category_id') ?? $question->question_category_id ?? '') == $category->id ? 'selected' : '' }} value="{{ $category->id }}">{{ $category->name }}</option>
                                 @endforeach
@@ -47,7 +47,7 @@
                         </div>
 
                         <div class="col-12 mb-4">
-                            <label for="title">Pertanyaan</label>
+                            <label for="question">Pertanyaan</label>
                             <textarea class="form-control" id="question" name="question" required value="{{ old('question') ?? $question->question ?? "" }}">{{ old('question') ?? $question->question ?? "" }}</textarea>
                         </div>
 
@@ -77,7 +77,6 @@
 @section('script')
 <script src="{{ asset('assets_/assets/ckeditor/ckeditor.js') }}"></script>
 <script type="text/javascript">
-    // $(document).ready(function() {
     CKEDITOR.replace('question');
     CKEDITOR.inline('explanation');
 
@@ -111,7 +110,7 @@
             Opsi ${option}
         </div>
         <div class="col">
-            <textarea name="options[${index}][option]" rows="1" class="form-control" id="option${option}">${optionValue}</textarea>
+            <textarea name="options[${index}][option]" rows="1" class="form-control" id="option${index}">${optionValue}</textarea>
         </div>
         <div class="col-auto">
             <input name="options[${index}][score]" type="number" required placeholder="Skor Opsi ${option}" class="form-control" value="${optionScore}">
@@ -136,7 +135,5 @@
     }
 
     loadOptions();
-
-    // })
 </script>
 @endsection

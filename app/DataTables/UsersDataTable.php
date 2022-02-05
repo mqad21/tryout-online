@@ -19,32 +19,23 @@ class UsersDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('action', function ($data) {
-                $edit_url = url('/pengguna/' . $data->id);
-                return view('datatables.users.action', compact(['edit_url']));
-            })
-            ->editColumn('photo_url', function ($data) {
-                return '<img data-enlargeable style="cursor:zoom-in" width="70" src="' . $data->photo_url . '"/>';
-            })
             ->editColumn('created_at', function ($data) {
                 $formatedDate = Carbon::createFromFormat('Y-m-d H:i:s', $data->created_at)->locale('id')->format('d-m-Y H:i:s');
                 return $formatedDate;
             })
-            ->editColumn('is_verified', function ($data) {
-                if (!$data->is_verified) return '';
-                return '<i class="fa fa-check"></i>';
+            ->addColumn('action', function ($data) {
+                $edit_url = route('user.edit', $data);
+                $delete_url = route('user.destroy', $data);
+                $custom = [
+                    [
+                        'icon' => 'fa fa-key',
+                        'url' => route('user.change-password', $data->id),
+                        'title' => 'Ganti Sandi'
+                    ]
+                ];
+                return view('datatables.action', compact(['edit_url', 'delete_url', 'custom']));
             })
-            ->editColumn('is_approved', function ($data) {
-                if (!$data->is_approved) return '';
-                return '<i class="fa fa-check"></i>';
-            })
-            ->editColumn('activity.name', function ($data) {
-                if (!$data->activity_id) {
-                    return '';
-                }
-                return $data->activity->name;
-            })
-            ->rawColumns(['is_verified', 'is_approved', 'action', 'photo_url']);
+            ->addIndexColumn();
     }
 
     /**
@@ -55,7 +46,7 @@ class UsersDataTable extends DataTable
      */
     public function query(User $model)
     {
-        return $model->newQuery()->allowed()->with(['role', 'activity']);
+        return $model->newQuery()->with(['region', 'role']);
     }
 
     /**
@@ -66,18 +57,13 @@ class UsersDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->setTableId('usersdatatable-table')
+            ->setTableId('userdatatable-table')
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->dom('Bfrtip')
-            ->orderBy(0)
-            ->drawCallback('function(){
-                initZoomImage();
-            }')
             ->parameters([
                 'responsive' => true,
-                'autoWidth' => false,
-                'scrollX' => true
+                'autoWidth' => false
             ]);
     }
 
@@ -89,19 +75,11 @@ class UsersDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::make('id'),
-            Column::make('photo_url')->title('Foto'),
+            Column::computed('DT_RowIndex', 'No.'),
             Column::make('name')->title('Nama'),
-            Column::make('graduation_year')->title('Stambuk'),
-            Column::make('address')->title('Alamat'),
-            Column::make('birth_place')->title('Tempat Lahir'),
-            Column::make('formatted_birth_date')->title('Tanggal Lahir')->searchable(false),
-            Column::make('phone_number')->title('Nomor HP'),
-            Column::make('activity.name')->title('Kegiatan'),
-            Column::make('detail_activity')->title('Detail Kegiatan')->searchable(false),
-            Column::make('role.name')->title('Role')->orderable(false),
-            Column::make('is_verified')->title('Diverifikasi'),
-            Column::make('is_approved')->title('Disetujui'),
+            Column::make('email')->title('Email'),
+            Column::make('region.name')->title('Asal Wilayah'),
+            Column::make('role.name')->title('Role'),
             Column::make('created_at')->title('Dibuat pada'),
             Column::computed('action')
                 ->exportable(false)

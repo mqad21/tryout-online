@@ -31,4 +31,35 @@ return [
             ],
         ]
     ], 
+    [
+        'title' => "Pengguna",
+        'menu' => [
+            [
+                'title' => 'Kelola Pengguna',
+                'icon' => 'fa fa-user',
+                'route' => 'user',
+                'url' => 'user',
+                'role' => [Role::ADMIN]
+            ],
+        ]
+    ], 
+    [
+        'title' => "Try Out",
+        'menu' => [
+            [
+                'title' => 'Kerjakan Try Out',
+                'icon' => 'fa fa-edit',
+                'route' => 'tryout/do',
+                'url' => 'tryout/do',
+                'role' => [Role::ADMIN, Role::SISWA]
+            ],
+            [
+                'title' => 'Hasil dan Pembahasan',
+                'icon' => 'fa fa-clipboard',
+                'route' => 'tryout/explanation',
+                'url' => 'tryout/explanation',
+                'role' => [Role::ADMIN, Role::SISWA]
+            ],
+        ]
+    ], 
 ];

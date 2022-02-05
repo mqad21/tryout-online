@@ -37,7 +37,8 @@ class QuestionCategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required'
+            'name' => 'required',
+            'passing_grade' => 'required'
         ]);
         QuestionCategory::create($request->only('name'));
         return redirect()->route('question-category.index')->with('alert', [

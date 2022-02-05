@@ -68,15 +68,16 @@ class QuestionCategoryDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::computed('DT_RowIndex','No.'),
+            Column::computed('DT_RowIndex', 'No.'),
             Column::make('name')->title('Nama Kategori'),
+            Column::make('passing_grade')->title('Passing Grade'),
             Column::make('created_at')->title('Dibuat pada'),
             Column::computed('action')
-            ->exportable(false)
-            ->printable(false)
-            ->width(60)
-            ->addClass('text-center')
-            ->title('Aksi'),
+                ->exportable(false)
+                ->printable(false)
+                ->width(60)
+                ->addClass('text-center')
+                ->title('Aksi'),
         ];
     }
 

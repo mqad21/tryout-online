@@ -16,6 +16,7 @@ class CreateQuestionCategoriesTable extends Migration
         Schema::create('question_categories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->integer('passing_grade');
             $table->timestamps();
         });
     }

@@ -2,228 +2,145 @@
 
 namespace App\Http\Controllers;
 
-use App\DataTables\AlumniDataTable;
 use App\DataTables\UsersDataTable;
-use App\Helpers\Constants;
-use App\Models\Activity;
-use App\Models\Department;
-use App\Models\Division;
-use App\Models\Job;
-use App\Models\Position;
+use App\Models\Region;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
-use ZipArchive;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-
-    public function daftar_pengguna(UsersDataTable $datatable)
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(UsersDataTable $datatable)
     {
-        return $datatable->render('pages.pengguna.manajemen-pengguna');
+        return $datatable->render("pages.user.index");
     }
 
-    public function download_kartu(Request $request)
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
     {
-        $zip = new ZipArchive;
-        $fileName = 'kartu_alumni.zip';
-        if ($zip->open(public_path($fileName), ZipArchive::CREATE) === TRUE) {
-            $files = File::files(public_path('profile_card'));
-            foreach ($files as $key => $value) {
-                $relativeNameInZipFile = basename($value);
-                $zip->addFile($value, $relativeNameInZipFile);
-            }
-
-            $zip->close();
-        }
-
-        return response()->download(public_path($fileName));
-    }
-
-    public function detail_pengguna(Request $request, $id)
-    {
-        $user = User::findOrFail($id);
-        $jobs = Job::all();
-        $departments = Department::all();
-        $divisions = Division::all();
-        $positions = Position::all();
-        $activities = Activity::all();
         $roles = Role::all();
-        $own_user = false;
-        return view('pages.profil', compact('jobs', 'departments', 'divisions', 'positions', 'roles', 'user', 'own_user', 'activities'));
+        $regions = Region::all();
+        return view('pages.user.create', compact('roles', 'regions'));
     }
 
-    public function detail_pengguna_post(Request $request, $id)
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
     {
-        if ($request->submit == 'approve') {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required',
+            'role_id' => 'required',
+            'password' => 'required|confirmed',
+            'password_confirmation' => 'required',
+            'region_id' => 'required'
+        ]);
+
+        $request['password'] = Hash::make($request->password);
+        User::create($request->only('name', 'email', 'role_id', 'password', 'region_id'));
+
+        return redirect()->route('user.index')->with('alert', [
+            'type' => 'success',
+            'message' => 'Berhasil Menambahkan Pengguna',
+            'title' => 'Berhasil'
+        ]);
+    }
+
+    /**
+     * Change password for specific user.
+     */
+    public function changePassword(Request $request, $id)
+    {
+        $user = User::find($id);
+
+        if ($request->password) {
             $request->validate([
-                'role_id' => 'required'
+                'password' => 'required|confirmed',
+                'password_confirmation' => 'required'
+            ]);
+
+            $user->update(['password' => Hash::make($request->password)]);
+            return redirect()->route('user.index')->with('alert', [
+                'type' => 'success',
+                'message' => 'Berhasil Mengganti Sandi Pengguna',
+                'title' => 'Berhasil'
             ]);
         }
-        $user = User::findOrFail($id);
-        if ($request->submit == 'approve') {
-            $user->is_approved = true;
-            $user->role_id = $request->role_id;
-        } else {
-            $user->is_approved = false;
-        }
-        $user->save();
-        if ($request->submit != 'approve') return redirect()->back();
-        return redirect('/pengguna')->with('alert', [
+
+        return view('pages.user.change-password', compact('user'));
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(User $user)
+    {
+        $roles = Role::all();
+        $regions = Region::all();
+        return view('pages.user.create', compact('user', 'regions', 'roles'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, User $user)
+    {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required',
+            'role_id' => 'required',
+            'region_id' => 'required'
+        ]);
+
+        $user->update($request->only('name', 'email', 'role_id', 'region_id'));
+
+        return redirect()->route('user.index')->with('alert', [
             'type' => 'success',
-            'message' => 'Berhasil menyetujui pengguna',
+            'message' => 'Berhasil Memperbarui Pengguna',
             'title' => 'Berhasil'
         ]);
     }
 
-    public function hapus_pengguna(Request $request, $id)
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(User $user)
     {
-        User::findOrFail($id)->delete();
-        return redirect('/pengguna')->with('alert', [
-            'type' => 'success',
-            'message' => 'Berhasil menghapus pengguna',
-            'title' => 'Berhasil'
-        ]);
-    }
-
-    public function alumni(AlumniDataTable $datatable)
-    {
-        return $datatable->render('pages.pengguna.direktori-alumni');
-    }
-
-    public function statistik_alumni()
-    {
-        $types = [
-            Constants::CHART_TYPE_STAMBUK,
-            Constants::CHART_TYPE_KEGIATAN,
-            Constants::CHART_TYPE_KEGIATAN_STAMBUK,
-        ];
-        return view('pages.pengguna.statistik-alumni', compact('types'));
-    }
-
-    public function grafik_alumni(Request $request)
-    {
-        $base_data_tahun = collect(range(1981, date("Y")))->mapWithKeys(function ($item) {
-            return [strval($item) . ' ' => 0];
-        });
-        $base_data_kegiatan = Activity::all()->pluck('name')->mapWithKeys(function ($item) {
-            return [$item => 0];
-        });
-        $base_data_tahun_kegiatan = $base_data_tahun->map(function () use ($base_data_kegiatan) {
-            return $base_data_kegiatan;
-        });
-
-        switch ($request->type) {
-            case Constants::CHART_TYPE_STAMBUK:
-                $type = "ColumnChart";
-                $count = User::alumni()->get()->groupBy('graduation_year')->map->count();
-                $count = $this
-                    ->merge_data($count, $base_data_tahun, true)
-                    ->map(function ($item, $key) {
-                        return ['Tahun Lulus' => $key, 'Jumlah Alumni' => $item];
-                    })->values();
-                $data = $this->associative_to_aoa($count);
-                $options = [
-                    'chart' => [
-                        'title' => $request->type,
-                    ],
-                    'bars' => 'vertical',
-                    'vAxis' => [
-                        'format' => 'decimal'
-                    ],
-                    'hAxis' => [
-                        'format' => 'decimal',
-                        'textStyle' => [
-                            'fontSize' => 12,
-                        ],
-                        'gridlines' => [
-                            'count' => 1,
-                            'interval' => 1,
-                        ]
-                    ],
-                    'legend' => [
-                        'position' => 'right'
-                    ],
-                ];
-                break;
-            case Constants::CHART_TYPE_KEGIATAN:
-                $type = "PieChart";
-                $count = User::alumni()->with('activity')->get()->groupBy('activity.name')->map->count();
-                $count = $this
-                    ->merge_data($count, $base_data_kegiatan)
-                    ->map(function ($item, $key) {
-                        return ['Kegiatan' => $key, 'Jumlah Alumni' => $item];
-                    })->values();
-                $data = $this->associative_to_aoa($count);
-                $options = [
-                    'height' => 300,
-                    'chart' => [
-                        'title' => $request->type,
-                    ],
-                ];
-                break;
-            case Constants::CHART_TYPE_KEGIATAN_STAMBUK:
-                $type = "ColumnChart";
-                $count = User::alumni()->get()->groupBy('graduation_year')->map(function ($item) use ($base_data_kegiatan) {
-                    return Activity::all()->mapWithKeys(function ($activity) use ($item) {
-                        return [$activity->name => collect($item)->where('activity_id', $activity->id)->count()];
-                    });
-                });
-                $count = $this
-                    ->merge_data($count, $base_data_tahun_kegiatan, true)
-                    ->map(function ($item, $key) {
-                        return collect(['Tahun Lulus' => $key])->merge($item);
-                    })->values();
-                $data = $this->associative_to_aoa($count);
-                $options = [
-                    'chart' => [
-                        'title' => $request->type,
-                    ],
-                    'bars' => 'vertical',
-                    'vAxis' => [
-                        'format' => 'decimal'
-                    ],
-                    'hAxis' => [
-                        'format' => 'decimal',
-                        'textStyle' => [
-                            'fontSize' => 12,
-                        ],
-                        'gridlines' => [
-                            'count' => 1,
-                            'interval' => 1,
-                        ]
-                    ],
-                    'isStacked' => true,
-                    'legend' => [
-                        'position' => 'right'
-                    ],
-                ];
-                break;
-        }
-
-        return view('pages.pengguna.grafik-alumni', compact('data', 'options', 'type'));
-    }
-
-    private function merge_data($collection, $base_data, $number_key = false)
-    {
-        if ($number_key) {
-            $collection = $collection->mapWithKeys(function ($item, $key) {
-                return [$key . ' ' => $item];
-            })->all();
-        }
-        return $base_data->merge($collection);
-    }
-
-    private function associative_to_aoa($associative)
-    {
-        $keys = collect($associative[0])->keys();
-        $aoa = collect($associative)
-            ->map(function ($item) {
-                return collect($item)->values();
-            })
-            ->prepend($keys)
-            ->values();
-        return $aoa;
+        $user->delete();
     }
 }

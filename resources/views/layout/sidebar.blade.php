@@ -36,7 +36,7 @@
                     @endphp
                     @foreach ($menus as $menu)
                         @if (count($menu['menu']) > 0)
-                            <x-sidebar-menu-title title="{{$menu['title']}}" />
+                            <x-sidebar-menu-title title="{{$menu['title']}}"/>
                             @foreach ($menu['menu'] as $item)
                             <x-sidebar-menu title="{{$item['title']}}" route="{{ $item['route'] }}" url="{{url('/' . $item['url'])}}" icon="{{$item['icon']}}" />
                             @endforeach

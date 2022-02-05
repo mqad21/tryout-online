@@ -1,1 +1,1 @@
-<li class="app-sidebar__heading">{{$title}}</li>
+<li class="app-sidebar__heading mt-4">{{$title}}</li>

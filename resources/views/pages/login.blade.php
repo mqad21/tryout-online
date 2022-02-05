@@ -1,3 +1,7 @@
+@extends('layout.auth')
+
+@section('title', 'Login')
+
 @include('layout.head')
 <div class="container login vw-100">
     <div class="row vh-100 mt-4">
@@ -21,7 +25,7 @@
                                 </div>
                                 <div class="col-12 mb-3">
                                     <label for="password">Password</label>
-                                    <input name="password" type="password" class="form-control" id="password" required minlength="8" maxlength="16" />
+                                    <input name="password" type="password" class="form-control" id="password" required/>
                                     <p class="w-100 text-right mb-0 mt-2">
                                         <a class="mt-2" href="{{ url('/lupa-password') }}">Lupa Password?</a>
                                     </p>
