@@ -23,7 +23,10 @@ use App\Models\QuestionOption;
 use App\Models\Role;
 use App\Models\Test;
 use App\Models\TryOut;
+use Illuminate\Support\Env;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
+use League\CommonMark\Environment;
 
 // Untuk route yang butuh role.
 function role_route($roles, $callback)
@@ -41,6 +44,14 @@ function role_route($roles, $callback)
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+// Migrate
+if (env('APP_ENV') == 'local') {
+    Route::get('/migrate', function(){
+        Artisan::call("migrate:fresh --seed");
+    });
+}
+
 
 // HomePage.
 
