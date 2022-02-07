@@ -15,8 +15,8 @@ class CreateQuestionTryOutTable extends Migration
     {
         Schema::create('question_try_out', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('try_out_id')->constrained();
-            $table->foreignId('question_id')->constrained();
+            $table->foreignId('try_out_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('question_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }

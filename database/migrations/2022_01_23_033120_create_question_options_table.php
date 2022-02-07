@@ -17,7 +17,7 @@ class CreateQuestionOptionsTable extends Migration
             $table->id();
             $table->text('option');
             $table->integer('score');
-            $table->foreignId('question_id')->constrained();
+            $table->foreignId('question_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }

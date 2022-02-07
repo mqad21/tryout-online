@@ -48,7 +48,7 @@ function role_route($roles, $callback)
 // Migrate
 if (env('APP_ENV') == 'local') {
     Route::get('/migrate', function(){
-        Artisan::call("migrate");
+        Artisan::call("migrate:fresh --seed");
     });
 }
 

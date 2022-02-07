@@ -17,7 +17,7 @@ class CreateQuestionsTable extends Migration
             $table->id();
             $table->text('question');
             $table->text('explanation');
-            $table->foreignId('question_category_id')->constrained();
+            $table->foreignId('question_category_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }

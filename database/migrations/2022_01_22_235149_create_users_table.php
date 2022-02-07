@@ -19,8 +19,8 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email', 64)->unique();
             $table->string('password')->nullable();
-            $table->foreignId('region_id')->constrained();
-            $table->foreignId('role_id')->constrained();
+            $table->foreignId('region_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('role_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }
