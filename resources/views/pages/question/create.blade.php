@@ -130,7 +130,9 @@
         if (val === -1) {
             $("#options-container").children().last().remove()
         } else {
-            $("#options-container").append(htmlOption($("#options-container").children().length))
+            const index = $("#options-container").children().length()
+            $("#options-container").append(htmlOption(index))
+            CKEDITOR.inline('option' + index)
         }
     }
 
