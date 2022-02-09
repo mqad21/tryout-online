@@ -72,7 +72,7 @@ class TryOutController extends Controller
     {
         $tryout = TryOut::find($id);
         if ($request->questions) {
-            $tryout->questions()->detach($request->questions);
+            $tryout->questions()->detach();
             $tryout->questions()->attach($request->questions);
             return redirect()->back()->with('alert', [
                 'type' => 'success',

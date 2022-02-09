@@ -108,10 +108,16 @@
     function setQuestion(question) {
         $("#selected-question").append(`
             <li class="mb-3">
-                <div class="border border-rounded p-3">${question.question}</div>
+                <div class="row pr-4">
+                    <div class="border border-rounded p-3 col px-0">${question.question}</div>
+                    <div class="col-auto px-0"><button class="btn btn-light btn-delete"><i class="fa fa-trash text-danger"></i></button></div>
+                </div>
                 <input name="questions[]" type="hidden" value="${question.id}"/>
             </li>
         `)
+        $(".btn-delete").click(function(){
+            $(this).parents("li").remove();
+        });
     }
 </script>
 @endsection

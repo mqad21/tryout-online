@@ -32,7 +32,7 @@ class QuestionController extends Controller
             ->map(function ($item) {
                 return [
                     'value' => $item,
-                    'text' => substr(strip_tags(htmlspecialchars_decode($item->question)), 0, 50)
+                    'text' => $item->question
                 ];
             });
         return $questions;
