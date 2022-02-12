@@ -14,7 +14,7 @@
                             <th>Rank</th>
                             <th>Nama</th>
                             @foreach($tryout->categories as $category)
-                                <th>{{ $category->name }}</th>
+                                <th>{{ $category->name ?? '' }}</th>
                             @endforeach
                             <th>Total</th>
                         </tr>
@@ -47,7 +47,8 @@
                 ...categories.map(category => ({
                     data: 'score.' + category.name,
                     name: 'score.' + category.name,
-                    className: 'text-right'
+                    className: 'text-right',
+                    defaultContent: 0,
                 })),
                 {
                     data: 'score_sum',

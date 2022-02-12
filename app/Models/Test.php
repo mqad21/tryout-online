@@ -37,7 +37,7 @@ class Test extends Model
     {
         return $this->belongsTo(TryOut::class);
     }
-    
+
     public function User()
     {
         return $this->belongsTo(User::class);
@@ -70,21 +70,24 @@ class Test extends Model
         return Carbon::parse($this->created_at);
     }
 
-    public function getDurationAttribute() {
+    public function getDurationAttribute()
+    {
         return $this->started_at->diff(Carbon::parse($this->done_at))->format('%H:%I:%S');;
     }
 
-    public function getAnswersListAttribute() {
+    public function getAnswersListAttribute()
+    {
         if (!$this->done_at) return null;
         return $this->answers()->with('option')->get()->pluck('option')->flatten()->pluck('id', 'question_id');
     }
 
-    public function getScoreAttribute() {
-        return $this->answers()->with(['option.question.category'])->get()->groupBy('option.question.category.name')->map->sum('option.score');
+    public function getScoreAttribute()
+    {
+        return $this->answers()->with(['option.question.category'])->get()->unique('option.question_id')->groupBy('option.question.category.name')->map->sum('option.score');
     }
 
-    public function getScoreSumAttribute() {
+    public function getScoreSumAttribute()
+    {
         return $this->answers()->with(['option.question.category'])->get()->sum('option.score');
     }
-
 }

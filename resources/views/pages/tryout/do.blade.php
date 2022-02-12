@@ -77,7 +77,7 @@
                             <div class="row px-2 mb-3">
                                 @foreach($questions as $index => $question)
                                     <div class="col-md-3 col-4 p-1">
-                                        <div data-question-number="{{ $index + 1 }}" data-question-id="{{ $question->id }}" class="btn btn-sm w-100 number {{ isset($answersList) ? ($answersList[$question->id] == $question->correct_answer->id ? 'btn-success' : 'btn-danger') : 'btn-light' }}">{{
+                                        <div data-question-number="{{ $index + 1 }}" data-question-id="{{ $question->id }}" class="btn btn-sm w-100 number {{ isset($answersList[$question->id]) ? ($answersList[$question->id] == $question->correct_answer->id ? 'btn-success' : 'btn-danger') : 'btn-light' }}">{{
                                         $index + 1 }}</div>
                                         <input type="hidden" name="answers[{{ $question->id }}]">
                                     </div>
