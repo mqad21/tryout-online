@@ -7,6 +7,7 @@ use App\Models\Region;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -65,7 +66,7 @@ class UserController extends Controller
      */
     public function changePassword(Request $request, $id)
     {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
 
         if ($request->password) {
             $request->validate([
@@ -82,6 +83,16 @@ class UserController extends Controller
         }
 
         return view('pages.user.change-password', compact('user'));
+    }
+
+    /**
+     * Force login for specific user.
+     */
+    public function forceLogin(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        Auth::login($user);
+        return redirect()->route('dashboard');
     }
 
     /**

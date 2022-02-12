@@ -85,7 +85,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profil', [ProfileController::class, 'index']);
     Route::post('/profil', [ProfileController::class, 'update']);
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/', [DashboardController::class, 'index']);
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     role_route([Role::ADMIN, Role::SISWA], function () {
         Route::get('/tryout/do/{id?}', [TryOutController::class, 'do'])->name('tryout.do');
@@ -104,5 +104,6 @@ Route::middleware(['auth'])->group(function () {
         Route::match(['get', 'post'], '/tryout/set-question/{id}', [TryOutController::class, 'setQuestions'])->name('tryout.set-question');
         Route::resource('/user', UserController::class);
         Route::match(['get', 'post'], '/user/change-password/{id}', [UserController::class, 'changePassword'])->name('user.change-password');
+        Route::get('/user/login/{id}', [UserController::class, 'forceLogin'])->name('user.force-login');
     });
 });

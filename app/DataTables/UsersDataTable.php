@@ -31,7 +31,12 @@ class UsersDataTable extends DataTable
                         'icon' => 'fa fa-key',
                         'url' => route('user.change-password', $data->id),
                         'title' => 'Ganti Sandi'
-                    ]
+                    ],
+                    [
+                        'icon' => 'fa fa-sign-in-alt',
+                        'url' => route('user.force-login', $data->id),
+                        'title' => 'Login'
+                    ],
                 ];
                 return view('datatables.action', compact(['edit_url', 'delete_url', 'custom']));
             })
