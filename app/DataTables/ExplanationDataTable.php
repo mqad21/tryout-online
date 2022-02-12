@@ -32,7 +32,7 @@ class ExplanationDataTable extends DataTable
                         'url' => route("tryout.explanation", encrypt($data->id)),
                         'title' => 'Pembahasan',
                         'icon' => 'fa fa-check-square',
-                        'hide' => !$data->gtryOut->show_explanation
+                        'hide' => !$data->tryOut->show_explanation
                     ],
                     [
                         'url' => route("tryout.result", encrypt($data->tryOut->id)),
