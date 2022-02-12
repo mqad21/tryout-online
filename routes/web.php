@@ -47,8 +47,10 @@ function role_route($roles, $callback)
 
 // Migrate
 if (env('APP_ENV') == 'local') {
-    Route::get('/migrate', function(){
-        Artisan::call("migrate");
+    role_route([Role::ADMIN], function () {
+        Route::get('/migrate', function () {
+            Artisan::call("migrate");
+        });
     });
 }
 
