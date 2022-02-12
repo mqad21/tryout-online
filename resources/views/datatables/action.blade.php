@@ -11,9 +11,11 @@
     @endisset
     @isset($custom)
         @foreach($custom as $c)
+            @if(!isset($c['hide']) || !$c['hide'])
             <a class="btn btn-sm btn-secondary mb-1" href="{{ $c['url'] }}" title="{{ $c['title'] }}">
                 <i class="{{ $c['icon'] }}"></i>
             </a>
+            @endif
         @endforeach
     @endisset
     @isset($delete_url)

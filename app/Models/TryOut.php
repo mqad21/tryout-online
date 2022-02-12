@@ -12,6 +12,11 @@ class TryOut extends Model
 
     protected $guarded = [];
 
+    public function scopeVisible($query)
+    {
+        return $query->where('show_try_out', 1);
+    }
+
     public function Questions()
     {
         return $this->belongsToMany(Question::class)->orderBy('question_try_out.id')->withTimestamps();
@@ -27,13 +32,14 @@ class TryOut extends Model
         return Carbon::parse($this->start_date)->format("d/m/Y") . ' - ' . Carbon::parse($this->end_date)->format("d/m/Y");
     }
 
-    public function getCategoriesAttribute() {
+    public function getCategoriesAttribute()
+    {
         return $this->questions->map->category->unique();
     }
 
     public function getRankAttribute()
     {
-        return $this->tests()->with(['user', 'user.region'])->whereNotNull('done_at')->get()->append(['score_sum', 'score'])->sortByDesc('score_sum')->groupBy('user_id')->values()->map(function($item, $index){
+        return $this->tests()->with(['user', 'user.region'])->whereNotNull('done_at')->get()->append(['score_sum', 'score'])->sortByDesc('score_sum')->groupBy('user_id')->values()->map(function ($item, $index) {
             $firstItem = $item->first();
             $firstItem->rank = $index + 1;
             return $firstItem;

@@ -51,13 +51,15 @@ class TryOutController extends Controller
             'duration' => 'required|numeric',
             'range' => 'required',
             'price' => 'required',
+            'show_try_out' => 'required',
+            'show_explanation' => 'required',
         ]);
 
         $range = Str::of($request->range)->split('/[\s-]+/');
         $request['start_date'] = Carbon::createFromFormat("d/m/Y", $range[0]);
         $request['end_date'] = Carbon::createFromFormat("d/m/Y", $range[1]);
 
-        $tryout = TryOut::create($request->only('name', 'duration', 'start_date', 'end_date', 'price'));
+        $tryout = TryOut::create($request->only('name', 'duration', 'start_date', 'end_date', 'price', 'show_try_out', 'show_explanation'));
         return redirect()->route('tryout.set-question', $tryout->id)->with('alert', [
             'type' => 'success',
             'message' => 'Berhasil Menambahkan Try Out',
@@ -91,7 +93,7 @@ class TryOutController extends Controller
     {
         if ($id) {
             $id = decrypt($id);
-            $tryout = TryOut::findOrFail($id);
+            $tryout = TryOut::visible()->findOrFail($id);
 
             $test = $tryout->tests->whereNull('done_at')->last();
             if (!$test) {
@@ -101,7 +103,7 @@ class TryOutController extends Controller
             return view('pages.tryout.do', compact('test'));
         }
 
-        $tryouts = TryOut::all();
+        $tryouts = TryOut::visible()->get();
         return view('pages.tryout.list', compact('tryouts'));
     }
 
@@ -182,7 +184,18 @@ class TryOutController extends Controller
      */
     public function update(Request $request, TryOut $tryout)
     {
-        $tryout->update($request->only('name', 'duration', 'start_date', 'end_date', 'price'));
+        $request['show_try_out'] = $request['show_try_out'] ?? '0';
+        $request['show_explanation'] = $request['show_explanation'] ?? '0';
+        $request->validate([
+            'name' => 'required',
+            'duration' => 'required|numeric',
+            'range' => 'required',
+            'price' => 'required',
+            'show_try_out' => 'required',
+            'show_explanation' => 'required',
+        ]);
+
+        $tryout->update($request->only('name', 'duration', 'start_date', 'end_date', 'price', 'show_try_out', 'show_explanation'));
 
         return redirect()->route('tryout.index')->with('alert', [
             'type' => 'success',
