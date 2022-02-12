@@ -8,22 +8,23 @@
 @section('content')
 
 @if($errors->any())
-    <div class="row">
-        <div class="col-md-12">
-            <div class="alert alert-danger">
-                <ul class="text-danger pl-4">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="alert alert-danger">
+            <ul class="text-danger pl-4">
+                @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
         </div>
     </div>
+</div>
 @endif
 
 <div class="row">
     <div class="col-md-12">
-        <a href="{{ route('tryout.index') }}" class="btn btn-primary mb-4"><i class="fa fa-arrow-left mr-2"></i>Daftar Try Out</a>
+        <a href="{{ route('tryout.index') }}" class="btn btn-primary mb-4"><i class="fa fa-arrow-left mr-2"></i>Daftar
+            Try Out</a>
     </div>
 </div>
 
@@ -57,9 +58,11 @@
             <div class="main-card card">
                 <div class="card-body">
                     <div class="mb-3">
-                        <div class="mb-4">
+                        <div class="mb-4"
+                            style="position: sticky; top: 60px; background: #ffffff; z-index: 1; padding: 1rem;">
                             <label for="questions">Cari Soal</label>
-                            <input id="questions" class="form-control autocomplete" type="text" data-url="{{ route('question.search') }}" autocomplete="off">
+                            <input id="questions" class="form-control autocomplete" type="text"
+                                data-url="{{ route('question.search') }}" autocomplete="off">
                         </div>
 
                         <hr class="pt-4 mb-0">
@@ -81,7 +84,8 @@
 @endsection
 
 @section('script')
-<script src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@master/dist/latest/bootstrap-autocomplete.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@master/dist/latest/bootstrap-autocomplete.min.js">
+</script>
 <script>
     var questions = [];
     @isset($tryout)
