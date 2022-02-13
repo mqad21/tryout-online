@@ -140,6 +140,7 @@ class TryOutController extends Controller
     {
         $id = decrypt($id);
         $tryout = TryOut::findOrFail($id);
+        return $tryout->rank;
         return view('pages.tryout.result', compact('tryout'));
     }
 

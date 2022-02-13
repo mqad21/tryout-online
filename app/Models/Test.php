@@ -88,6 +88,6 @@ class Test extends Model
 
     public function getScoreSumAttribute()
     {
-        return $this->answers()->with(['option.question.category'])->get()->sum('option.score');
+        return $this->answers()->with(['option.question.category'])->get()->unique('option.question_id')->sum('option.score');
     }
 }
