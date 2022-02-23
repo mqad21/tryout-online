@@ -110,7 +110,11 @@
     ];
     @endif
 
-    const htmlOption = (index, optionValue = '', optionScore = '') => {
+
+    loadOptions();
+   })
+
+   const htmlOption = (index, optionValue = '', optionScore = '') => {
         const option = String.fromCharCode(97 + index).toUpperCase()
         return `
     <div class="row mb-4">
@@ -146,7 +150,5 @@
         }
     }
 
-    loadOptions();
-   })
 </script>
 @endsection
