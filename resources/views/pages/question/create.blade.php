@@ -110,7 +110,6 @@
     @endif
 
 
-    loadOptions();
 
    const htmlOption = (index, optionValue = '', optionScore = '') => {
         const option = String.fromCharCode(97 + index).toUpperCase()
@@ -147,6 +146,8 @@
             CKEDITOR.inline('option' + index)
         }
     }
+
+    loadOptions();
 
 </script>
 @endsection
