@@ -106,6 +106,10 @@
             value: '',
             score: ''
         },
+        {
+            value: '',
+            score: ''
+        },
     ];
     @endif
 
