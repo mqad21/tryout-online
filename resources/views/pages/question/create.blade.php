@@ -6,29 +6,30 @@
 @section('content')
 
 @if($errors->any())
-    <div class="row">
-        <div class="col-md-12">
-            <div class="alert alert-danger">
-                <ul class="text-danger pl-4">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="alert alert-danger">
+            <ul class="text-danger pl-4">
+                @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
         </div>
     </div>
+</div>
 @endif
 
 <div class="row">
     <div class="col-md-12">
-        <a href="{{ route('question.index') }}" class="btn btn-primary mb-4"><i class="fa fa-arrow-left mr-2"></i>Daftar Soal</a>
+        <a href="{{ route('question.index') }}" class="btn btn-primary mb-4"><i class="fa fa-arrow-left mr-2"></i>Daftar
+            Soal</a>
     </div>
 </div>
 
 <form method="post" action="{{ isset($question) ? route('question.update', $question) : route('question.store') }}">
     @csrf
     @isset($question)
-        @method('PUT')
+    @method('PUT')
     @endisset
     <div class="row">
         <div class="col-md-12">
@@ -41,26 +42,32 @@
                             <select required class="form-control" name="question_category_id" id="question_category">
                                 <option selected disabled>Pilih Kategori Soal</option>
                                 @foreach($questionCategories as $category)
-                                    <option {{ (old('question_category_id') ?? $question->question_category_id ?? '') == $category->id ? 'selected' : '' }} value="{{ $category->id }}">{{ $category->name }}</option>
+                                <option {{ (old('question_category_id') ?? $question->question_category_id ?? '') ==
+                                    $category->id ? 'selected' : '' }} value="{{ $category->id }}">{{ $category->name }}
+                                </option>
                                 @endforeach
                             </select>
                         </div>
 
                         <div class="col-12 mb-4">
                             <label for="question">Pertanyaan</label>
-                            <textarea class="form-control" id="question" name="question" required value="{{ old('question') ?? $question->question ?? "" }}">{{ old('question') ?? $question->question ?? "" }}</textarea>
+                            <textarea class="form-control" id="question" name="question" required
+                                value="{{ old('question') ?? $question->question ?? "" }}">{{ old('question') ?? $question->question ?? "" }}</textarea>
                         </div>
 
                         <div id="options-container" class="col-12"></div>
 
                         <div class="col-12 mb-3">
-                            <div class="btn btn-sm btn-outline-primary px-4 mr-2" onclick="addOption()">Tambah Opsi <i class="fa fa-plus ml-2"></i></div>
-                            <div class="btn btn-sm btn-outline-secondary px-4" onclick="addOption(-1)">Hapus Opsi <i class="fa fa-minus ml-2"></i></div>
+                            <div class="btn btn-sm btn-outline-primary px-4 mr-2" onclick="addOption()">Tambah Opsi <i
+                                    class="fa fa-plus ml-2"></i></div>
+                            <div class="btn btn-sm btn-outline-secondary px-4" onclick="addOption(-1)">Hapus Opsi <i
+                                    class="fa fa-minus ml-2"></i></div>
                         </div>
 
                         <div class="col-12 mb-3">
                             <label for="explanation">Pembahasan</label>
-                            <textarea name="explanation" id="explanation">{{ old('explanation') ?? $question->explanation ?? "" }}</textarea>
+                            <textarea name="explanation"
+                                id="explanation">{{ old('explanation') ?? $question->explanation ?? "" }}</textarea>
                         </div>
 
                         <div class="col-auto ml-auto">
@@ -77,6 +84,7 @@
 @section('script')
 <script src="{{ asset('assets_/assets/ckeditor/ckeditor.js') }}"></script>
 <script type="text/javascript">
+    $(document).ready(function(){
     CKEDITOR.replace('question');
     CKEDITOR.inline('explanation');
 
@@ -122,7 +130,9 @@
     function loadOptions() {
         options.forEach((option, index) => {
             $("#options-container").append(htmlOption(index, option.value, option.score))
-            CKEDITOR.inline('option' + index)
+            setTimeout(() => {
+                CKEDITOR.inline('option' + index)
+            }, 100);
         })
     }
 
@@ -137,5 +147,6 @@
     }
 
     loadOptions();
+   })
 </script>
 @endsection
