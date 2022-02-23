@@ -84,7 +84,7 @@
 @section('script')
 <script src="{{ asset('assets_/assets/ckeditor/ckeditor.js') }}"></script>
 <script type="text/javascript">
-    $(document).ready(function(){
+    $(document).load(function(){
     CKEDITOR.replace('question');
     CKEDITOR.inline('explanation');
 

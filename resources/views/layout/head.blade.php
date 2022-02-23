@@ -14,9 +14,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     {{-- <link href="{{asset('assets_/assets/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
 </head> --}}
-<link href="{{ asset('assets_/assets/bootstrap-select/css/bootstrap-select.min.css') }}" rel="stylesheet" />
+{{-- <link href="{{ asset('assets_/assets/bootstrap-select/css/bootstrap-select.min.css') }}" rel="stylesheet" /> --}}
 <link href="{{ asset('assets_/assets/sweet-alert/sweetalert2.min.css') }}" rel="stylesheet" />
-<link href="{{ asset('assets_/assets/summernote/summernote.min.css') }}" rel="stylesheet" />
+{{-- <link href="{{ asset('assets_/assets/summernote/summernote.min.css') }}" rel="stylesheet" /> --}}
 <link href="{{ asset('assets_/assets/datatables/datatables.min.css') }}" rel="stylesheet" />
 <link href="{{ asset('assets_/main.css') }}" rel="stylesheet" />
 @yield('link')
@@ -25,3 +25,4 @@
 
 <body>
     <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
+
