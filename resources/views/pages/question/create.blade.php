@@ -84,7 +84,6 @@
 @section('script')
 <script src="{{ asset('assets_/assets/ckeditor/ckeditor.js') }}"></script>
 <script type="text/javascript">
-    $(document).load(function(){
     CKEDITOR.replace('question');
     CKEDITOR.inline('explanation');
 
@@ -112,7 +111,6 @@
 
 
     loadOptions();
-   })
 
    const htmlOption = (index, optionValue = '', optionScore = '') => {
         const option = String.fromCharCode(97 + index).toUpperCase()
