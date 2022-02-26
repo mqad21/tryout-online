@@ -78,16 +78,16 @@ class Test extends Model
     public function getAnswersListAttribute()
     {
         if (!$this->done_at) return null;
-        return $this->answers()->get()->pluck('question_option_id', 'question_id');
+        return $this->answers;
     }
 
     public function getScoreAttribute()
     {
-        return $this->answers()->with(['option.question.category'])->get()->unique('option.question_id')->groupBy('option.question.category.name')->map->sum('option.score');
+        return $this->answers()->with(['option.question.category'])->get()->groupBy('option.question.category.name')->map->sum('option.score');
     }
 
     public function getScoreSumAttribute()
     {
-        return $this->answers()->with(['option.question.category'])->get()->unique('option.question_id')->sum('option.score');
+        return $this->answers()->with(['option.question.category'])->get()->sum('option.score');
     }
 }
