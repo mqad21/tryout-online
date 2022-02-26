@@ -12,14 +12,12 @@ class TestAnswer extends Model
     protected $guarded = [];
     protected $appends = ['question_id'];
 
-    public function option()
-    {
+    public function option() {
         return $this->belongsTo(QuestionOption::class, 'question_option_id');
     }
 
-    public function getQuestionIdAttribute()
-    {
-        $questionId = $this->option->question_id;
-        return "$questionId";
+    public function getQuestionIdAttribute() {
+        return $this->option->question_id;
     }
+
 }
