@@ -130,6 +130,7 @@ class TryOutController extends Controller
         }
         $id = decrypt($id);
         $test = Test::findOrFail($id);
+        return $test->answers_list;
         return view('pages.tryout.do', compact('test'));
     }
 
