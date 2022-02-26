@@ -78,7 +78,8 @@ class Test extends Model
     public function getAnswersListAttribute()
     {
         if (!$this->done_at) return null;
-        return $this->answers()->with('option')->get()->pluck('option')->flatten()->pluck('id', 'question_id');
+        // return $this->answers()->with('option')->get()->pluck('option')->flatten()->pluck('id', 'question_id');
+        return $this->answers->pluck('id', 'question_id');
     }
 
     public function getScoreAttribute()
