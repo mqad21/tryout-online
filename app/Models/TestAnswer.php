@@ -17,7 +17,8 @@ class TestAnswer extends Model
     }
 
     public function getQuestionIdAttribute() {
-        return $this->option->question_id;
+        $questionId = $this->option->question_id;
+        return "$questionId";
     }
 
 }
