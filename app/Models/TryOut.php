@@ -14,7 +14,7 @@ class TryOut extends Model
 
     public function scopeVisible($query)
     {
-        return $query->where('show_try_out', 1);
+        return $query->where('show_try_out', 1)->whereDate('start_date', '<=', Carbon::now())->whereDate('end_date', '>=', Carbon::now());
     }
 
     public function Questions()

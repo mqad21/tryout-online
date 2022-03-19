@@ -21,16 +21,6 @@
                                             <td>{{ $tryout->duration }} Menit</td>
                                         </tr>
                                         <tr>
-                                            <th>Harga</th>
-                                            <td>
-                                                @if($tryout->price == 0)
-                                                    Gratis
-                                                @else
-                                                    @rupiah($tryout->price)
-                                                @endif
-                                            </td>
-                                        </tr>
-                                        <tr>
                                             <th>Kategori</th>
                                             <td>{{ $tryout->questions->pluck('category.name')->unique()->join(", ") }}</td>
                                         </tr>
