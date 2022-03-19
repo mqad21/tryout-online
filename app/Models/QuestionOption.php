@@ -8,7 +8,7 @@ class QuestionOption extends Model
 {
     protected $guarded = [];
 
-    protected $with = ['answers'];
+    public $with = ['answers'];
 
     public function Question() {
         return $this->belongsTo(Question::class);
