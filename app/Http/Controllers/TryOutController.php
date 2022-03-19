@@ -95,7 +95,7 @@ class TryOutController extends Controller
             $id = decrypt($id);
             $tryout = TryOut::visible()->findOrFail($id);
 
-            $test = $tryout->tests->whereNull('done_at')->last();
+            $test = $tryout->tests()->own()->whereNull('done_at')->last();
             if (!$test) {
                 $test = $tryout->tests()->create();
             }
