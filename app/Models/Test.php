@@ -45,7 +45,7 @@ class Test extends Model
 
     public function Answers()
     {
-        return $this->tryOut->questions->map->options()->get()->map->answers();
+        return $this->tryOut->questions->map->options()->map->answers();
     }
 
     public function getIsOnProgressAttribute()
