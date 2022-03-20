@@ -196,6 +196,9 @@ class TryOutController extends Controller
             'show_explanation' => 'required',
         ]);
 
+        $range = Str::of($request->range)->split('/[\s-]+/');
+        $request['start_date'] = Carbon::createFromFormat("d/m/Y", $range[0]);
+        $request['end_date'] = Carbon::createFromFormat("d/m/Y", $range[1]);
         $tryout->update($request->only('name', 'duration', 'start_date', 'end_date', 'price', 'show_try_out', 'show_explanation'));
 
         return redirect()->route('tryout.index')->with('alert', [
