@@ -45,7 +45,7 @@ class Test extends Model
 
     public function Answers()
     {
-        return $this->hasMany(Answer::class);
+        return $this->hasMany(TestAnswer::class);
     }
 
     public function getIsOnProgressAttribute()
