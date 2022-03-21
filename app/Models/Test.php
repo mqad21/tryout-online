@@ -12,7 +12,7 @@ class Test extends Model
     use HasFactory;
 
     protected $guarded = [];
-    protected $appends = ['duration', 'answers_list'];
+    protected $appends = ['duration'];
 
     public function scopeOwn()
     {
@@ -45,7 +45,7 @@ class Test extends Model
 
     public function Answers()
     {
-        return $this->tryOut->questions->map->(options()->map->answers());
+        return $this->tryOut->questions->map->options()->map->answers();
     }
 
     public function getIsOnProgressAttribute()
