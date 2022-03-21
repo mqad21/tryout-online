@@ -45,7 +45,7 @@ class Test extends Model
 
     public function Answers()
     {
-        $options = $this->tryOut->questions->map->options();
+        return $this->tryOut->questions->map->options->answers;
         if ($options->count()) {
             return $options->map(function($item){
                 return $item->get()->answers();
