@@ -47,7 +47,9 @@ class Test extends Model
     {
         $options = $this->tryOut->questions->map->options();
         if ($options->count()) {
-            return $options->map->answers();        
+            return $options->map(function($item){
+                return $item->get()->answers();
+            });        
         }
         return null;
     }
