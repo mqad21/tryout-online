@@ -60,6 +60,13 @@ return [
                 'url' => 'tryout/explanation',
                 'role' => [Role::ADMIN, Role::SISWA]
             ],
+            [
+                'title' => 'Grafik Hasil Try Out',
+                'icon' => 'fa fa-check',
+                'route' => 'tryout/chart',
+                'url' => 'tryout/chart',
+                'role' => [Role::ADMIN, Role::SISWA]
+            ]
         ]
     ], 
 ];

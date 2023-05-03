@@ -94,6 +94,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/tryout/explanation/{id?}', [TryOutController::class, 'explanation'])->name('tryout.explanation');
         Route::get('/tryout/explanation/{id}/result', [TryOutController::class, 'result'])->name('tryout.result');
         Route::get('/tryout/explanation/{id}/result/json', [TryOutController::class, 'resultJson'])->name('tryout.result.json');
+        Route::get('/tryout/chart', [TryOutController::class, 'showChart'])->name('tryout.chart');
     });
 
     role_route([Role::ADMIN], function () {

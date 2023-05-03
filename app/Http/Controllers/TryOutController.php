@@ -217,4 +217,55 @@ class TryOutController extends Controller
     {
         $tryout->delete();
     }
+
+    /**
+     * Show chart
+     */
+    public function showChart()
+    {
+        // Get tests with tryout name like SKD
+        $tests = Auth::user()->tests()->whereHas("tryOut", function($q){
+            $q->where('name', 'like', '%SKD%');
+        })->get();
+
+        $tests = $tests->map(function ($test) {
+            return [
+                'name' => $test->tryOut->name,
+                'score' => $test->score,
+                'created_at' => $test->created_at->format('d M Y'),
+            ];
+        })->sortBy('created_at')->values();
+
+        $labels = $tests->pluck('name');
+
+        // get score keys
+        $scoreKeys = $tests->pluck('score')->map(function ($score) {
+            return $score->keys();
+        })->flatten()->unique();
+
+        // get score values by score keys
+        $datasets = $scoreKeys->map(function ($scoreKey, $index) use ($tests) {
+            // random color by $index
+            $randomR = rand(0, 255);
+            $randomG = rand(0, 255);
+            $randomB = rand(0, 255);
+            $color = 'rgba(' .$randomR . ',' .$randomG . ',' .$randomB . ', 0.2)';
+            $border = 'rgba(' .$randomR . ',' .$randomG . ',' .$randomB . ', 1)';
+
+            return [
+                'label' => $scoreKey,
+                'data' => $tests->pluck('score')->map(function ($score) use ($scoreKey) {
+                    return $score[$scoreKey] ?? 0;
+                }),
+                'backgroundColor' => $color,
+                'borderColor' => $border,
+                'borderWidth' => 1,
+            ];
+        });
+
+        // return $datasets;
+
+        return view('pages.tryout.chart', compact('tests', 'labels', 'datasets'));
+    }
+
 }
