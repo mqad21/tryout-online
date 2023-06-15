@@ -47,10 +47,8 @@ function role_route($roles, $callback)
 
 // Migrate
 if (env('APP_ENV') == 'local') {
-    role_route([Role::ADMIN], function () {
-        Route::get('/migrate', function () {
-            Artisan::call("migrate");
-        });
+    Route::get('/migrate', function () {
+        Artisan::call("migrate");
     });
 }
 
@@ -81,7 +79,7 @@ Route::prefix('auth')->group(function () {
     });
 });
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'single_session'])->group(function () {
     Route::get('/profil', [ProfileController::class, 'index']);
     Route::post('/profil', [ProfileController::class, 'update']);
     Route::post('/logout', [AuthController::class, 'logout']);

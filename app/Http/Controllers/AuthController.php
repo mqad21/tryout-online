@@ -33,6 +33,12 @@ class AuthController extends Controller
 
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             LoginActivity::create(['user_id' => Auth::user()->id]);
+
+            // save session_id
+            $user = User::find(Auth::user()->id);
+            $user->session_id = session()->getId();
+            $user->save();
+
             return redirect('');
         } elseif ($user = User::firstWhere('email', $request->email)) {
             if ($user->google_id) return redirect()->back()->withErrors(['error' => 'Harap login menggunakan akun google']);

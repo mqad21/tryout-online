@@ -66,6 +66,7 @@ class Kernel extends HttpKernel
         'role' => \App\Http\Middleware\RoleMiddleware::class,
         'profile' => \App\Http\Middleware\ProfileCheckMiddleware::class,
         'approved' => \App\Http\Middleware\ApprovedMiddleware::class,
-        'verif' => \App\Http\Middleware\VerifyMiddleware::class
+        'verif' => \App\Http\Middleware\VerifyMiddleware::class,
+        'single_session' => \App\Http\Middleware\SingleSession::class,
     ];
 }
